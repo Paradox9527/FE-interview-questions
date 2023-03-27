@@ -5,7 +5,6 @@
 ------
 
 - rgba和透明度
-
 - background-image、background-origin（原点位置的背景相对区域）、background-size、background-repeat
 - word-wrap：break-word（对长的不可分割的单词换行）
 - 文字阴影 text-shadow、盒阴影box-shadow
@@ -13,6 +12,14 @@
 - border-radius
 - 边框图片border-image
 - 媒体查询：定义多套css，当游览器尺寸发生变化时采用不同的属性
+
+
+
+#### ul和li标签如何样式设置成none
+
+----
+
+list-style-type:none
 
 #### style标签写在body后与body有什么区别？
 

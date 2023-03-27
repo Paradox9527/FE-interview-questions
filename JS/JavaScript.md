@@ -1136,3 +1136,117 @@ console.log(adventurer.someNonExistentMethod?.());
 // Expected output: undefined
 ```
 
+#### Map与Object的区别
+
+-----
+
+二者都是以key-value的形式对数据进行存储；
+
+- key的数据类型范围不同
+
+  obj可以作为key的仅有number、string、symbol
+
+  map都可以
+
+- key的顺序不同
+
+  obj通过obj.keys()打印出来的属性顺序是number的话就是排序好的字符串
+
+  ```javascript
+  const object1 = {
+    1: 'somestring',
+    
+    3: false,
+    2: 42,
+  };
+  
+  console.log(Object.keys(object1));
+  // 输出的是['1','2','3']
+  ```
+
+  map的key顺序是声明的顺序
+
+- 创建的方式不同
+
+  obj有三种创建方式，字面量{}、new Object()、构造函数
+
+  map仅仅支持new Map()
+
+- key的调用不同
+
+  map只能用原生的get方法调用
+
+- size属性
+
+  map有size属性，对象没有。Map.size返回Map中元素的数量，而Obj的键值对这个数只能手动计算
+
+
+
+#### Array.prototype.slice.apply(arguments) 解释一下意图
+
+----
+
+arguments为类数组对象，并不是真正的数组。slice可以实现数组的浅拷贝。由于arguments不是真正的数组，所以没有slice方法，通过apply可以调用数组对象的slice方法，从而将arguments类数组转换为数组。
+
+#### 直接在script标签中写export为什么会报错？
+
+----
+
+现代游览器可以支持用script标签引入模块或者脚本，如果要引入模块，必须给script标签加type=”module“。如果引入脚本，则不需要type
+
+#### mouseover和mouseenter有什么区别
+
+-----
+
+当鼠标移动到元素上时就会触发mouseenter事件，类似mouseover，它们两者之间的差别是enter不会冒泡。enter不支持事件冒泡，导致在一个元素的子元素上进入或离开的时候会触发其mouseover和mouseout事件，但是却不会出发enter和leave事件
+
+#### offsetWidth/offsetHeight,clientWidth/clientHeight 与 scrollWidth/scrollHeight 的区别？
+
+----
+
+- clientWidth/height：返回元素内部宽度，它的值只包含content + padding，如果有滚动条，不包含滚动条。clientTop返回的是上边框的宽度。clientLeft返回左边框宽度
+- offsetWidth/height：返回元素的布局宽度，它的值包含content + padding + border 包含滚动条。offsetTop返回的是当前元素相对于其offsetParent元素的顶部距离。offsetLeft返回的是当前元素相对于其offsetParent元素左部的距离。
+- scrollWidth/height：返回值包含content + padding + 溢出内容的尺寸。scrollTop属性返回的是一个元素的内容垂直滚动的像素数。scrollLeft属性返回的是元素滚动条到元素左边的距离
+
+#### toPrecision和toFixed和Math.round有什么区别
+
+----
+
+toPrecision用于处理精度，精度是从左至右第一个不为0的数开始数起。toFixed是对小数点后指定位数取整，从小数点开始数起。Math.round是将数字四舍五入到一个整数
+
+#### 什么是Polyfill
+
+----
+
+Polyfill 指的是用于实现浏览器并不支持的原生 API 的代码。 比如说 querySelectorAll 是很多现代浏览器都支持的原生 Web API，但是有些古老的浏览器并不支持，那么假设有人写了一段代码来实现这个功能使这些浏览器也支持了这个功能，那么这就可以成为一个 Polyfill。
+
+#### setTimeout为什么不能保证能够及时执行
+
+----
+
+是否及时执行取决于js线程是拥挤的还是空闲的。当游览器的js引擎遇到setTimeout，不会立即将其放入异步队列，同步任务执行之后，timer模块会到设置时间之后放到异步队列中。js引擎发现同步队列中没有要执行的东西了，即运行栈空了，就从异步队列中读取，然后放到运行栈中执行。所以setTimeout可能会多了等待线程的时间。这时setTimeout函数体就变成了运行栈中的执行任务，运行栈空了，再监听异步队列中有没有要执行的任务，如果有就继续执行，如此循环，就叫eventloop
+
+#### JS阻止事件冒泡和默认事件
+
+----
+
+event.stopPropagation()方法。阻止事件冒泡。但是默认事件仍然会执行。
+
+event.preventDefault()方法。比如a标签上绑定事件上调用此方法，链接则不会被打开，但会发生事件冒泡，传递到上一层的父元素。
+
+return false: 同时阻止事件冒泡和默认事件
+
+#### 事件代理
+
+----
+
+又称事件委托。是js中常用绑定事件的技巧。即把原本需要绑定在子元素的响应事件委托给父元素，让父元素担当事件监听的职务。事件代理的原理是DOM的事件冒泡。
+
+捕获阶段：从window对象传到目标节点（上层传到底层）捕获阶段不会响应任何事件
+
+目标阶段：在目标节点上触发，称为”目标阶段“
+
+冒泡阶段：从目标节点传导回window对象（从底册传回上层）。事件代理就是利用这个原理绑定到外层
+
+
+

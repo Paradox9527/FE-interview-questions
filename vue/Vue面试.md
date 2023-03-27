@@ -713,3 +713,18 @@ beforeRouteEnter：只要通过路由，不管哪一条路由显示该组件就�
 beforeRouterUpdate：路由组件被复用时，例如/a/1，进入a页面，在当前组件重新进入/a/2，显示a页面，a页面就会被复用，组件没有销毁，组件不会重新走，created不会执行，此时可以使用beforeRouterUpdate解决
 
 beforeRouteLeave：表单页面的返回，提示用户当前表单未提交是否离开，离开当前组件
+
+
+
+#### vue2项目迁移vite步骤
+
+----
+
+```javascript
+npm i vite vite-plugin-vue2 @originjs/vite-plugin-require-context vite-plugin-commonjs postcss-pxtorem path-browserify sass -D
+```
+
+根目录创建index.html，其实是从public 中把index给拿出来，区别在于引入了main.js
+
+创建vite.config,.js
+

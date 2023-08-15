@@ -230,11 +230,38 @@ list-style-type:none
 
 弹性布局。由container（容器）以及item（项目）组成。通常可用于 水平/垂直居中，两栏，三栏布局等场景。
 
+例子：导航栏的那种左右两块布局
+
+```html
+<header>
+    <nav>...</nav>
+    <div>...</div>
+</header>
+css:
+
+nav {
+	display: flex;
+	align-item: center;
+}
+header {
+	display: flex;
+	align-item: center;
+}
+
+header nav {
+	margin-right: auto；// 这边就是右边外边距自适应
+}
+也可以给div设置margin-left：auto  这两个效果一样
+header div {
+	margin-left: auto;
+}
+```
+
 flex属性，是flex-grow，flex-shrink和flex-basis的简写，默认值为0 1 auto。该属性有两个快捷值：auto（1 1 auto）和none （0 0 auto）
 
-- flex-grow：定义item（项目）的放大比例，默认为0，即如果存在剩余空间，也不放大。如果所有项目的flex-grow属性都为1，则它们将等分为剩余空间（如果有的话）。如果一个item的flex-grow属性为2，其他item（项目）都为1，则前者占据的剩余空间将比其他项多一倍。
-- flex-shrink：项目的缩小比例，默认为1，即如果空间不足，项目将缩小。如果所有item（项目）的这个属性都是1，当空间不足的时候，都将等比例缩小。如果一个item（项目）为0，其他为1，则空间不足时，前者缩小。
-- flex-basis：定义了在分配多余空间之前，项目占据的主轴空间。游览器会根据该属性，计算主轴是否有多余空间。默认值为auto，即item（项目）本来大小。当设置为0时，会根据内容撑开。也可以设为跟width，height属性一样的值（350px），则项目将占据固定空间。
+- flex-grow(增长的量)：定义item（项目）的放大比例，默认为0，即如果存在剩余空间，也不放大。如果所有项目的flex-grow属性都为1，则它们将等分为剩余空间（如果有的话）。如果一个item的flex-grow属性为2，其他item（项目）都为1，则前者占据的剩余空间将比其他项多一倍。
+- flex-shrink(缩减的量)：项目的缩小比例，默认为1，即如果空间不足，项目将缩小。如果所有item（项目）的这个属性都是1，当空间不足的时候，都将等比例缩小。如果一个item（项目）为0，其他为1，则空间不足时，前者缩小。
+- flex-basis(增长和缩减的基准)：定义了在分配多余空间之前，项目占据的主轴空间。游览器会根据该属性，计算主轴是否有多余空间。默认值为auto，即item（项目）本来大小。当设置为0时，会根据内容撑开。也可以设为跟width，height属性一样的值（350px），则项目将占据固定空间。
 
 常用的属性值
 
@@ -244,7 +271,7 @@ flex属性，是flex-grow，flex-shrink和flex-basis的简写，默认值为0 1 
 - flex: auto --> flex: 1 1 auto
 - flex: none --> flex: 0 0 auto【常用于固定尺寸不伸缩】
 
-----有补充的项目，这点不够，flex-direction都没
+flex-direction默认为row：即水平方向为主轴；另一个值是column 将主轴改为垂直方向
 
 #### 清除浮动
 
@@ -591,3 +618,24 @@ div {
 }
 ```
 
+#### 不适用border创建边框
+
+使用box-shadow: x轴偏移 y轴偏移  模糊半径 扩散半径 颜色
+
+例如输入框input
+
+```css
+input {
+    border:none;
+    outline: none;
+    border-bottom: 1px solid #3797a4;
+    padding-bottom: 10px
+}
+input:focus {
+    border:none;
+    padding-bottom:0;
+    box-shadow:0 0 0 5px  #fcf876
+}
+```
+
+设置内边框，就要用到inset关键字， 写在最前面

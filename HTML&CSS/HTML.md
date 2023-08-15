@@ -18,7 +18,7 @@
 
 ----
 
-- 行内元素：a、b、span、img、input
+- 行内元素：a、b、span、img、input、select、strong
 - 块级元素：div、ul、ol、dl、dd、h1、p
 - 空元素：br、hr、img、link、meta
 

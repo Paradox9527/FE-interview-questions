@@ -545,6 +545,30 @@ console.log(months);
 // Expected output: Array ["Jan", "Feb", "March", "April", "May"]
 ```
 
+- `Array.prototype.slice()`：返回一个新的数组对象，这一对象是一个由 `start` 和 `end` 决定的原数组的[浅拷贝](https://developer.mozilla.org/zh-CN/docs/Glossary/Shallow_copy)（包括 `start`，不包括 `end`），其中 `start` 和 `end` 代表了数组元素的索引。原始数组不会被改变。
+
+```javascript
+const animals = ['ant', 'bison', 'camel', 'duck', 'elephant'];
+
+console.log(animals.slice(2));
+// Expected output: Array ["camel", "duck", "elephant"]
+
+console.log(animals.slice(2, 4));
+// Expected output: Array ["camel", "duck"]
+
+console.log(animals.slice(1, 5));
+// Expected output: Array ["bison", "camel", "duck", "elephant"]
+
+console.log(animals.slice(-2));
+// Expected output: Array ["duck", "elephant"]
+
+console.log(animals.slice(2, -1));
+// Expected output: Array ["camel", "duck"]
+
+console.log(animals.slice());
+// Expected output: Array ["ant", "bison", "camel", "duck", "elephant"]
+```
+
 
 
 #### String.prototype.（字符串的一些方法）
@@ -1248,5 +1272,238 @@ return false: 同时阻止事件冒泡和默认事件
 
 冒泡阶段：从目标节点传导回window对象（从底册传回上层）。事件代理就是利用这个原理绑定到外层
 
+#### JS怎么实现继承的
 
+-----
 
+- 1.原型链继承：让一个构造函数的原型是另一个类型的实例，那么这个构造函数new出来的实例就具有该实例的属性；
+
+```javascript
+function Parent() {
+    this.isShow = true;
+    this.info = {
+        name: "abc",
+        age: 22
+    }
+}
+Parent.prototype.getInfo = function () {
+    console.log(this.info);
+    console.log(this.isShow);
+}
+function Child() {}
+Child.prototype = new Parent();
+// 例子
+let Child1 = new Child();
+Child1.info.gender = '男';
+Child1.getInfo(); // {name: 'abc', age: 22, gender: '男'} ture;
+let child2 = new Child();
+child2.isShow = false;
+clg(child2.info.gender)// 男
+chilld.getInfo();//  {name: 'abc' age: 22, gender: '男'} false;
+
+```
+
+优点：写法方便简洁，容易理解；
+
+缺点：对象实例共享所有继承的属性和方法，无法向父类构造函数传参；
+
+- 2.构造函数继承：在子类型构造函数的内部调用父类型构造函数；使用apply或者call方法将父对象的构造函数绑定在子对象上
+
+```javascript
+function Parent(gender) {
+    this.info = {
+        name: 'yyy',
+        age: 22,
+        gender: gender
+    }
+}
+function Child(gender) {
+    Parent.call(this, gender);
+}
+let child1 = new Child('男');
+child1.info.nickname = 'xxxx'
+console.log(child1.info);
+
+let child2 = new Child('女');
+console.log(child2.info);
+```
+
+优点：解决了原型链实现继承的不能传参的问题和父类的原型共享的问题
+
+缺点：借用构造函数的缺点是方法都在构造函数中定义，因此无法实现函数复用。在父类型的原型中定义的方法，对子类型而言也是不可见的，结果苏哦有类型都只能使用构造函数模式。
+
+- 3.组合继承：将原型链和借用构造函数的组合到一块。使用原型链实现对原型属性和方法的继承，而通过借用构造函数来实现对实例属性的继承。这样，即通过在原型上定义方法实现了函数复用，又能保证每个实例都有自己的属性。
+
+```javascript
+function Person(gender) {
+    console.log('执行次数');
+    this.info = {
+        name: 'yyy',
+        age: '19',
+        gender: gender
+    }
+}
+
+Person.prototype.gentInfo = function () {// 使用原型链继承原型上的属性和方法
+    console.log(this.info.name, this.info.age);
+}
+
+function Child(gender) {
+    Person.call(this, gender); // 使用构造函数法传递参数;
+}
+
+Child.prototype = new Person()
+
+let child1 = new Child('男')
+child1.info.nickname = 'xxx'
+child1.getInfo();
+console.log(child1.info);
+
+let child2 = new Child('女')
+console.log(child2.info)
+```
+
+优点：解决了原型链继承和借用构造函数继承造成的影响；
+
+缺点：无论在什么情况下，都会调用两次父类构造函数；一次是在创建子类原型的时候，另一次是在子类构造函数内部。
+
+- 4.原型式继承：基于已有对象来创建新的对象。原理：向函数中传入一个对象，然后返回一个以这个对象为原型的对象。es5中定义的Object.create()方法就是原型式继承的实现
+
+```javascript
+function CreateObj(o) {
+    function F() {}
+    F.prototype = o;
+    console.log(o.__proto__ === Object.prototype);
+    console.log(F.prototype.constructor === Object); // true
+    return new F();
+}
+
+var person = {
+    name: '123',
+    friend: ['abc', 'fgo']
+}
+
+var person1 = CreateObj(person);
+// var person2 = CreateObj(person);
+person1.name = 'person1'
+// console.log(person2.name) // ‘123’
+person1.friend.push('ddd');
+// console.log(person2.friend) // ['abc', 'fgo', 'ddd']
+// console.log(person) // {name: '123', friend: Array(3)}
+person1.friend = ['gg']
+// console.log(person1.friend) // ['gg']
+// console.log(person.friend) // ['abc', 'fgo', 'ddd']
+
+// 这里修改了person1.name的值，person2.name 的值并未改变，并不是因为他们有独立的值
+// 修改时，并非修改原型上的name值
+// 我们找对象的属性时，总是先找实例上对象，没有找到的话再去原型对象上的属性
+// 实例对象和原型对象上如果有同名属性，总是先取实例对象上的值
+```
+
+优点：类似复制一个对象，用函数来包装
+
+缺点：所有实例都会继承原型的属性，无法实现复用（新实例属性都是后面添加的）
+
+- 5.寄生式继承：创建一个用于封装过程的函数，通过传入一个对象，然后复制一个对象的副本，然后对这个对象扩展，最后返回这个对象。
+
+```javascript
+var ob = {
+    name: '123',
+    friends: ['abc', 'fgo']
+}
+function CreateObj(o) {
+    function F() {}; // 创建一个构造函数F
+    F.prototype = o;
+    return new F();
+}
+// 上面的这个createObj函数跟es5 Object.create(ob)效果是一样的
+var ob1 = CreateObj(ob);
+var ob2 = Object.create(ob);
+console.log(ob1.name);// 123
+console.log(ob2.name);// 123
+
+function CreateChild(o) {
+    var newob = CreateObj(o) // 创建对象  用object.create也行
+    newob.sayName = function() {
+        console.log(this.name);
+    }
+    return newob;//  指定对象
+}
+var p1 = CreateChild(ob);
+p1.sayName(); // 123
+```
+
+重点：就是给原型式继承外面套了个壳子；
+
+优点：没有创建自定义类型，因为只是套了个壳子返回对象（这个），这个函数顺理成章就成了创建的新对象。
+
+缺点：没用到原型，无法复用
+
+- 6.寄生式组合式继承。
+
+```javascript
+function Parent(name) {
+    this.name = name;
+    this.colors = ['red', 'blue', 'green'];
+}
+
+Parent.prototype.sayName = function () {
+    console.log(this.name);
+}
+
+function Child(name,age) {
+    Parent.call(this, name);
+    this.age = age;
+}
+
+function CreateObj(o) {
+    function F(){};
+    F.prototype = o;
+    return new F();
+}
+
+// Child.prototype = new Parent(); // 这里换成下面
+function prototype(child, parent) {
+    var prototype = CreateObj(parent.prototype);
+    prototype.constructor = child;
+    child.prototype = prototype;
+}
+prototype(Child, Parent);
+
+var child1 = new Child('123', 18);
+console.log(child1)
+```
+
+修复了组合继承的问题
+
+- 7.ES6、class实现继承
+
+  class通过extends关键字实现继承，实质是先创建出父类的this对象，然后用子类的构造函数修改this，子类的构造方法中必须调用super方法，且只有在调用了super方法之后才能使用this。因为子类的this对象是继承父类的this对象，然后对其进行加工，而super方法表示的是父类的构造函数，用来新建父类的this对象
+
+```javascript
+class Animal {
+    constructor(kind) {
+        this.kind = kind
+    }
+    getKind() {
+        return this.kind
+    }
+}
+// 继承Animal
+class Cat extends Animal {
+    constructor(name) {
+        // 子类的构造方法中必须先调用super方法
+        super('cat');
+        this.name = name;
+    }
+    getCatInfo() {
+        console.log(this.name + '：' + super.getKind())
+    }
+}
+const cat1 = new Cat('buding')
+cat1.getCatInfo(); // buding：cat
+```
+
+优点：语法简单易懂，操作更方便
+
+缺点：并不是所有的游览器都支持class关键字

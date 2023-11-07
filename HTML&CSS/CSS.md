@@ -35,16 +35,41 @@ list-style-type:none
 
 1.选择器：
 
-- id选择器（#myid）
-- 类选择器（.myclass）
-- 属性选择器（a[rel = "external"]）
-- 伪类选择器（a:hover, li:nth-child()）
+- id选择器（#box），选择id为box的元素
+- 类选择器（.one），选择类名为one的所有元素
+- 属性选择器（a[rel = "external"]），选择有属性rel=“external”的元素
+
+```
+([attribute]) 选择带有attribute属性的元素
+([attribute=value]) 选择所有使用attribute=value的元素
+([attribute~=value]) 选择attribute属性包含value的元素
+([attribute|=value]): 选择attribute属性以value开头的元素
+
+CSS3新增
+[attribute*=value]：选择attribute属性值包含value的所有元素
+[attribute^=value]：选择attribute属性开头为value的所有元素
+[attribute$=value]：选择attribute属性结尾为value的所有元素
+```
+
+- 伪类选择器（a:hover, li:nth-child(n)）
 - 标签选择器（div，h1，p）
 - 伪元素选择器（p::first-line）
-- 相邻选择器（h1 + p）
-- 子选择器（ul > li）
-- 后代选择器（li a）
+- 相邻同袍选择器（.one+.two），选择紧接着.one之后的所有的.two元素
+- 子选择器（.one > one_1），选择父元素为.one的所有.one_1的元素
+- 后代选择器（#box div），选择id为box元素内部所有的div元素
 - 通配符选择器（*）
+
+```html
+<div id="box">
+    <div class="one">
+        <p class="one_1"></p>
+        <p class="one_2"></p>
+    </div>
+    <div class="two"></div>
+    <div class="two"></div>
+    <div class="two"></div>
+</div>
+```
 
 2.优先级
 
@@ -56,6 +81,29 @@ list-style-type:none
 - 关系选择器 / 通配符选择器 （0000）
 
 带！important 标记的样式属性优先级最高；样式表的来源相同时：!important > 行内样式 > ID选择器 > 类选择器 > 标签 > 通配符 > 继承 > 游览器默认属性
+
+3.css3新增的选择器
+
+- 层级选择器（p~ul），选择前面有p元素的每个ul元素
+- 伪类选择器
+
+```
+:first-of-type 表示一组同级元素中其类型的第一个元素
+:last-of-type 表示一组同级元素中某类型的最后一个元素
+:only-of-type 表示没有同类型兄弟元素的元素
+:only-child 表示没有任何兄弟的元素
+:nth-child(n) 根据元素在一组同级中的位置匹配元素
+:nth-last-of-type(n) 匹配给定类型的元素，基于它们在一组兄弟元素中的位置，从末尾开始计数
+:last-child 表示一组兄弟元素中的最后一个元素
+:root 设置HTML文档
+:empty 指定空的元素
+:enabled 选择可用元素
+:disabled 选择被禁用元素
+:checked 选择选中的元素
+:not(selector)选择与<selector> 不匹配的所有元素
+```
+
+
 
 #### rgba() 和 opacity 设置透明度的区别是什么？
 
@@ -444,7 +492,7 @@ css3流出来的一个概念。低级游览器不支持css3，但css3的效果�
 
 -----
 
-- display：none：直接小时
+- display：none：直接消失
 - visibility：hidden 不可见，但占着位置
 - opacity：0 透明不可见，但占位置
 - position：absolute 绝对定位并移出可见范围

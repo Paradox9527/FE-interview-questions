@@ -135,7 +135,7 @@ CSS3新增
 
 4.css3中transition支持visibility属性，但不支持display。因为transition可以延迟执行。配合visibility使用纯css延时显示效果可以提高用户体验
 
-5.display：none会引起回流（重拍）和重绘；visibility：hidden会引起重绘。
+5.display：none会引起回流（重排）和重绘；visibility：hidden会引起重绘。
 
 #### 简述transform，transition，animation的作用
 

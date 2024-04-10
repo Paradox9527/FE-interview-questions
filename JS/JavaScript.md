@@ -40,7 +40,7 @@ var a = { count: 1, deep: { count: 2 } };
 var b = Object.assign({}, a);
 // 或者
 var c = {...a}
-// 实现一个浅拷贝 对象的话
+// 实现一个深拷贝 对象的话 简单的写法
 function shallowClone(obj) {
   const newObj = {};
   for (let prop in obj) {
